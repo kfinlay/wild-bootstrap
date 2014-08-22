@@ -11,4 +11,5 @@ Goals:
 	* Menu of wild bootstrap weights
 * Accepts a Stata restriction matrix to generate null hypotheses
 	* But the default might accept a simpler single null hypothesis (using the `test` syntax?)
+* Should largely be written in Mata to reduce run time
 * Help file
