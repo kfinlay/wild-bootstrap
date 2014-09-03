@@ -13,3 +13,4 @@ Goals:
 	* But the default might accept a simpler single null hypothesis (using the `test` syntax?)
 * Should largely be written in Mata to reduce run time
 * Help file
+* Certification script (under Monte Carlo with random seed?)
