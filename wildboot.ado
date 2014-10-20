@@ -1,6 +1,51 @@
 * wild bootstraps
 
 program wildboot, eclass
+
+	program wildboot
+	        version 9, missing
+	        local version : di "version " string(_caller()) ", missing:"
+
+	        // <my_stuff> : <command>
+	        _on_colon_parse `0'
+	        local command `"`s(after)'"'
+	        local 0 `"`s(before)'"'
+
+	        syntax [anything(name=exp_list equalok)]        ///
+	                [fw iw pw aw] [if] [in] [,              ///
+	                        noDOTS                          ///
+	                        Reps(integer -1)                ///
+	                        SAving(string)                  ///
+	                        DOUBle                          /// not documented
+	                        noLegend                        ///
+	                        Verbose                         ///
+	                        SEED(string)                    ///
+	                        NOIsily                         /// "prefix" options
+	                        TRace                           ///
+	                ]
+
+	        if "`weight'" != "" {
+	                local wgt [`weight'`exp']
+	        }
+
+
+	syntax [if] [in] [aw fw pw iw] [, wvar(varname) wf(real 1) 	/*
+		*/ vce(passthru) nulllist(numlist ascending) wald ar /*
+		*/ k j clr wildols wildineff wildeff wildncr scorebs wcs bayesian werser wermdser /*
+		*/ wildweight(string) small /*
+		*/ x_xb(varname) x_r(varname) y_wb(varname) x_wb(varname) zdel(varname) ehat(varname) /*
+		*/ xeqn(name) delhat(name) zz(name) zzinv(name) zehat(name) /*
+		*/ depvar(varname) endo(varname) inexog(varlist) exexog(varlist) *]
+	marksample touse
+	sum `wvar' if `touse' [`weight'`exp'], meanonly
+	local N=r(sum_w)*`wf'
+	`quietly' simulate, `reps' saving(`wildfile', double) `trace' `noisily' nodots nolegend: WildBootCore if `touse' `wtexp', wvar(`wvar') wf(`wf') `vceopt' `clusterexp' nulllist(`nulllist') `wald' `ar' `k' `j' `clr' `wildols' `wildineff' `wildeff' `wildncr' `scorebs' `wcs' `bayesian' `werser' `wermdser' `wildweight' `small' x_xb(`x_xb') x_r(`x_r') y_wb(`y_wb') x_wb(`x_wb') depvar(`lhs') endo(`endo') inexog(`inexog') exexog(`exexog')
+	* post results
+		matrix colnames `b' = `testbootlist'
+		ereturn post `b' `wtexp', esample(`touse') obs(`N')
+end
+
+program WildBootCore, eclass
 	* parse
 		syntax [if] [in] [aw fw pw iw] [, wvar(varname) wf(real 1) 	/*
 			*/ vce(passthru) nulllist(numlist ascending) wald ar /*
